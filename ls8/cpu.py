@@ -103,7 +103,7 @@ class CPU:
             IR = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc + 1)
             operand_b = self.ram_read(self.pc + 2)
-
+            
             # LDI: Set the value of a register to an integer.
 
             if IR == LDI:
@@ -183,7 +183,30 @@ class CPU:
                 self.alu("CMP", operand_a, operand_b)
                 self.pc += 3
 
-           
+            # JMP: Jump to the address stored in the given register.
+            # Set the PC to the address stored in the given register.
+
+            elif IR == JMP:
+                address = self.register[operand_a]
+                self.pc = address
+
+            # JEQ: If equal flag is set (true), jump to the address stored in the given register.
+
+            elif IR == JEQ:
+                if self.flag == 0b00000001:
+                    address = self.register[operand_a]
+                    self.pc = address
+                else:
+                    self.pc += 2
+
+            # JNE: If E flag is clear (false, 0), jump to the address stored in the given register.
+
+            elif IR == JNE: 
+                if self.flag & 0b00000001 == 0b00000000:
+                    address = self.register[operand_a]
+                    self.pc = address
+                else:
+                    self.pc += 2
 
            
 
